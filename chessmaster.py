@@ -20,6 +20,8 @@ class ChessPiece(object):
         if tile[0] in xaxes:
             if int(tile[1]) <= 8:
                 return (xaxes.find(tile[0]), int(tile[1])-1)
+        else:
+            return None
             
 
     def is_legal_move(self, position):
@@ -31,18 +33,13 @@ class ChessPiece(object):
 
     def move(self, position):
         if self.is_legal_move(position):
+            moves = []
             oldposition = self.prefix + self.position
-            newposition = self.prefix + position
-            newmove = []
-            newmove.append(newposition)
-            newmove.append(time.time())
-            newmove = tuple(newmove)
-            self.moves.append(newmove)
-            return self.moves
-        
-    
-
-
-if __name__ == '__main__':
-    piece = ChessPiece('a1')
-    print piece.move('c4')
+            moves.append(oldposition)     #myconnundrum
+            self.position = self.prefix + position
+            newposition = self.position
+            moves.append(newposition)
+            moves.append(time.time())
+            moves = tuple(moves)
+            self.moves.append(moves)
+        return moves
