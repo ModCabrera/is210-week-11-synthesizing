@@ -14,40 +14,13 @@ class ChessPiece(object):
         else:
             self.position = position
             self.moves = []
-            self.holdposition = position
 
     def algebraic_to_numeric(self, tile):
-        axis_x = {'a': 0,
-                  'b': 1,
-                  'c': 2,
-                  'd': 3,
-                  'e': 4,
-                  'f': 5,
-                  'g': 6,
-                  'h': 7
-                  }
-        axis_y = {'1': 0,
-                  '2': 1,
-                  '3': 2,
-                  '4': 3,
-                  '5': 4,
-                  '6': 5,
-                  '7': 6,
-                  '8': 7
-                  }
-    
-        tilelist = list(tile)
-        newtile = []
-        for item in tile:
-            if item in axis_x:
-                newtile.append(axis_x[item])
-            elif item in axis_y:
-                newtile.append(axis_y[item])
-                newtile = tuple(newtile)
-                self.position = newtile
-            else:
-                return None
-        return newtile
+        xaxes = 'abcdefg'
+        if tile[0] in xaxes:
+            if int(tile[1]) <= 8:
+                return (xaxes.find(tile[0]), int(tile[1])-1)
+            
 
     def is_legal_move(self, position):
         newposition = self.algebraic_to_numeric(position)
@@ -57,11 +30,10 @@ class ChessPiece(object):
             return True
 
     def move(self, position):
-        newposition = self.prefix + position
         if self.is_legal_move(position):
-            oldposition = self.prefix + self.holdposition
+            oldposition = self.prefix + self.position
+            newposition = self.prefix + position
             newmove = []
-            newmove.append(oldposition)
             newmove.append(newposition)
             newmove.append(time.time())
             newmove = tuple(newmove)
