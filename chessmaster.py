@@ -68,10 +68,10 @@ class Bishop(ChessPiece):
         ChessPiece.__init__(self, position)
 
     def is_legal_move(self, position):
-        newpos = self.algebraic_to_numeric(position)
-        oldpos = self.algebraic_to_numeric(self.position)
+        boldpos = self.algebraic_to_numeric(position)
+        bnewpos = self.algebraic_to_numeric(self.position)
         if ChessPiece.is_legal_move(self, position):
-            if (newpos[0]%oldpos[0]) == (newpos[1]%oldpos[1]):
+            if (boldpos[0]+bnewpos[0]) % (boldpos[1]+bnewpos[1]) is 0:
                 return True
         else:
             return False
@@ -84,12 +84,46 @@ class King(ChessPiece):
         ChessPiece.__init__(self, position)
 
     def is_legal_move(self, position):
+        koldpos = self.algebraic_to_numeric(position)
+        knewpos = self.algebraic_to_numeric(self.position)
         if ChessPiece.is_legal_move(self, position):
-            
-            return True
-        else:
-            return False
+            if (knewpos[1]+knewpos[0]%koldpos[1]+koldpos[0]):
+                return True    
+            else:
+                return False
 
+
+class ChessMatch(object):
+    
+
+    def __init__(self, pieces=None):
+        if pieces is not None:
+            self.pieces = pieces
+            self.log = []
+        else:
+            None
+            
+    def reset(self):
+        ChessMatch.__init__(self)
+        position_dict = {'Ra1': 'a1',
+                    'Rh1': 'h1',
+                    'Ra8': 'a8',
+                    'Rh8': 'h8',
+                    'Bc1': 'c1',
+                    'Bf1': 'f1',
+                    'Bc8': 'c8',
+                    'Bf8': 'f8',
+                    'Ke1': 'e1',
+                    'Ke8': 'e8'}
+        self.log = []
+        return self.log
+        
+    def move(self, pieces, position):
+        pieces = self.pieces
+        print pieces
+        
+            
+        
 
 
 
@@ -98,7 +132,9 @@ if __name__ == '__main__':
     piece.move('b2')
     rook = Rook('a1')
     rook.move('h1')
-    bishop = Bishop('c3')
-    print bishop.move('a5')
-    king = King('a1')
-    king.move('a8')
+    bishop = Bishop('f2')
+    king = King('d4')
+    match = ChessMatch({'Bf2': bishop, 'Kd5': king})
+    match.move('Ke1', 'e2')
+    #match.reset()
+    
