@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Chessmaster Piece Tracker"""
 import time
-
+import math
 
 class ChessPiece(object):
     prefix = ''
@@ -84,57 +84,64 @@ class King(ChessPiece):
         ChessPiece.__init__(self, position)
 
     def is_legal_move(self, position):
-        koldpos = self.algebraic_to_numeric(position)
-        knewpos = self.algebraic_to_numeric(self.position)
-        if ChessPiece.is_legal_move(self, position):
-            if (knewpos[1]+knewpos[0]%koldpos[1]+koldpos[0]):
-                return True    
-            else:
-                return False
+        oldpos = self.algebraic_to_numeric(position)
+        newpos = self.algebraic_to_numeric(self.position)
+        if ((math.fabs(newpos[1] - oldpos[1]) <= 1)):
+            if (newpos[1]+newpos[0]%oldpos[1]+oldpos[0]):
+                return True
+        else:
+            return False
 
 
 class ChessMatch(object):
     
 
     def __init__(self, pieces=None):
-        if pieces is not None:
+        if pieces is None:
+            self.reset()
+        else:
             self.pieces = pieces
             self.log = []
-        else:
-            None
             
     def reset(self):
-        ChessMatch.__init__(self)
-        position_dict = {'Ra1': 'a1',
-                    'Rh1': 'h1',
-                    'Ra8': 'a8',
-                    'Rh8': 'h8',
-                    'Bc1': 'c1',
-                    'Bf1': 'f1',
-                    'Bc8': 'c8',
-                    'Bf8': 'f8',
-                    'Ke1': 'e1',
-                    'Ke8': 'e8'}
         self.log = []
-        return self.log
+        self.pieces = {'Ra1': Rook('a1'),
+                    'Rh1': Rook('h1'),
+                    'Ra8': Rook('a8'),
+                    'Rh8': Rook('h8'),
+                    'Bc1': Bishop('c1'),
+                    'Bf1': Bishop('f1'),
+                    'Bc8': Bishop('c8'),
+                    'Bf8': Bishop('f8'),
+                    'Ke1': King('e1'),
+                    'Ke8': King('e8')}
         
-    def move(self, pieces, position):
-        pieces = self.pieces
-        print pieces
+        return self.pieces
         
+    def move(self, piece, position):
+        holdpieces = self.pieces.items()
+        if piece is holdpieces[0][0]:
+            newlog = (piece, piece[0]+position, time.time())
+            self.log.append(newlog)
+            oldposition = self.pieces[piece]
+            self.pieces.pop(piece)
+            self.pieces.update({piece[0]+position:oldposition})
             
-        
-
-
+        elif piece is holdpieces[1][0]:
+            newlog = (piece, piece[0]+position, time.time())
+            self.log.append(newlog)
+            oldposition = self.pieces[piece]
+            self.pieces.pop(piece)
+            self.pieces.update({piece[0]+position:oldposition})
+        else:
+            return False
 
 if __name__ == '__main__':
-    piece = ChessPiece('a1')
-    piece.move('b2')
-    rook = Rook('a1')
-    rook.move('h1')
-    bishop = Bishop('f2')
-    king = King('d4')
-    match = ChessMatch({'Bf2': bishop, 'Kd5': king})
-    match.move('Ke1', 'e2')
-    #match.reset()
+    white = King('e1')
+    black = King('e8')
+    match = ChessMatch({'Ke1': white, 'Ke8': black})
+    match.move('Ke1', 'f2')
+    #match.move('Kf1', 'e3')
+    
+
     
