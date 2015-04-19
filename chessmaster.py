@@ -135,13 +135,16 @@ class ChessMatch(object):
             self.pieces.update({piece[0]+position:oldposition})
         else:
             return False
+        
+    def __len__(self):
+        piecelist = self.pieces.items()
+        return len(piecelist)
 
 if __name__ == '__main__':
     white = King('e1')
     black = King('e8')
     match = ChessMatch({'Ke1': white, 'Ke8': black})
     match.move('Ke1', 'f2')
-    #match.move('Kf1', 'e3')
     
 
     
