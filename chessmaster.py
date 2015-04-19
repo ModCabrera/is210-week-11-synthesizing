@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Chessmaster Piece Tracker"""
 import time
-import math
+
 
 class ChessPiece(object):
     prefix = ''
@@ -86,7 +86,7 @@ class King(ChessPiece):
     def is_legal_move(self, position):
         oldpos = self.algebraic_to_numeric(position)
         newpos = self.algebraic_to_numeric(self.position)
-        if ((math.fabs(newpos[1] - oldpos[1]) <= 1)):
+        if ((abs(newpos[1] - oldpos[1]) <= 1)):
             if (newpos[1]+newpos[0]%oldpos[1]+oldpos[0]):
                 return True
         else:
@@ -119,20 +119,20 @@ class ChessMatch(object):
         return self.pieces
         
     def move(self, piece, position):
+        ChessPiece.move.__init__(self)
         holdpieces = self.pieces.items()
-        if piece is holdpieces[0][0]:
-            newlog = (piece, piece[0]+position, time.time())
-            self.log.append(newlog)
-            oldposition = self.pieces[piece]
-            self.pieces.pop(piece)
-            self.pieces.update({piece[0]+position:oldposition})
-            
-        elif piece is holdpieces[1][0]:
-            newlog = (piece, piece[0]+position, time.time())
-            self.log.append(newlog)
-            oldposition = self.pieces[piece]
-            self.pieces.pop(piece)
-            self.pieces.update({piece[0]+position:oldposition})
+        if piece[0] is 'K':
+            self.log.append((piece, piece[0]+position, time.time()))
+            newmove = King(position)
+            self.pieces[piece] = King(position)
+        elif piece[0] is 'B':
+            self.log.append((piece, piece[0]+position, time.time()))
+            newmove = Bishop(position)
+            self.pieces[piece] = King(position)
+        elif piece[0] is 'K':
+            self.log.append((piece, piece[0]+position, time.time()))
+            newmove = Rook(position)
+            self.pieces[piece] = King(position)
         else:
             return False
         
@@ -145,6 +145,9 @@ if __name__ == '__main__':
     black = King('e8')
     match = ChessMatch({'Ke1': white, 'Ke8': black})
     match.move('Ke1', 'f2')
+    match.move('Kf2', 'f3')
+    ish = ChessPiece('a1')
+    ish.move('b2')
     
 
     
