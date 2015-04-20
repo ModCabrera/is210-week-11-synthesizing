@@ -113,6 +113,46 @@ class ChessPiece(object):
             return False
 
 
+class Pawn(ChessPiece):
+    """Object is Pawn in Chess Game.
+    Attribute:
+        prefix (str): Default = P: Prefix of Pawn Chess piece.
+    """
+
+    prefix = 'P'
+
+    def is_legal_move(self, position):
+        """Determines if the move is allowed.
+        Args:
+            None
+
+        Returns:
+            False (bool): Value if move is illegal.
+            True (bool): Value if move is legal.
+
+        Examples:
+        >>> pawn = Pawn('a2')
+        >>> pawn.prefix
+        'P'
+        >>> pawn.move('a4')
+        False
+        >>> pawn.move('a3')
+        ('Pa2', 'Pa3', 1429504093.100469)
+        >>> pawn.move('b4')
+        False
+        >>> pawn.move('a4')
+        ('Pa3', 'Pa4', 1429504336.858478)
+        """
+        if ChessPiece.is_legal_move(self, position):
+            if self.position[0] is position[0]:
+                if abs(int(position[1]) - int(self.position[1])) == 1:
+                    return True
+            elif position[1] == self.position[1]:
+                    return True
+            else:
+                return False
+
+
 class Rook(ChessPiece):
     """Object is Rook in Chess Game.
 
@@ -304,4 +344,4 @@ class ChessMatch(object):
             moved = chesspiece.move(position)
             self.log.append(moved)
             self.pieces.pop(piece)
-            self.pieces.update({moved[1]: chesspiece})
+            self.pieces[moved[1]] = chesspiece
