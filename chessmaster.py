@@ -5,6 +5,8 @@ import time
 
 
 class ChessPiece(object):
+    """Docstring
+    """
     prefix = ''
     
     def __init__(self, position):
@@ -16,6 +18,8 @@ class ChessPiece(object):
             self.moves = []
 
     def algebraic_to_numeric(self, tile):
+        """Docstring
+        """
         xaxes = 'abcdefgh'
         yaxes = [1,2,3,4,5,6,7,8]
         if len(tile) > 2:
@@ -27,12 +31,16 @@ class ChessPiece(object):
                 return None
 
     def is_legal_move(self, position):
+        """Docstring
+        """
         if not self.algebraic_to_numeric(position):
             return False
         else:
             return True
 
     def move(self, position):
+        """Docstring
+        """
         if self.is_legal_move(position):
             move = (self.prefix + self.position, self.prefix + position, time.time())
             self.moves.append(move)
@@ -43,6 +51,8 @@ class ChessPiece(object):
 
 
 class Rook(ChessPiece):
+    """Docstring
+    """
     prefix = 'R'
     
     
@@ -50,6 +60,8 @@ class Rook(ChessPiece):
         ChessPiece.__init__(self, position)
 
     def is_legal_move(self, position):
+        """Docstring
+        """
         if ChessPiece.is_legal_move(self, position):
             if self.position[0] is position[0]:
                 if int(self.position[1]) != int(position[1]):
@@ -62,12 +74,16 @@ class Rook(ChessPiece):
 
 
 class Bishop(ChessPiece):
+    """Docstring
+    """
     prefix = 'B'
 
     def __init__(self, position):
         ChessPiece.__init__(self, position)
 
     def is_legal_move(self, position):
+        """Docstring
+        """
         boldpos = self.algebraic_to_numeric(position)
         bnewpos = self.algebraic_to_numeric(self.position)
         if ChessPiece.is_legal_move(self, position):
@@ -78,12 +94,16 @@ class Bishop(ChessPiece):
 
 
 class King(ChessPiece):
+    """Docstring
+    """
     prefix = 'K'
 
     def __init__(self, position):
         ChessPiece.__init__(self, position)
 
     def is_legal_move(self, position):
+        """Docstring
+        """
         oldpos = self.algebraic_to_numeric(position)
         newpos = self.algebraic_to_numeric(self.position)
         if ((abs(newpos[1] - oldpos[1]) <= 1)):
@@ -94,6 +114,8 @@ class King(ChessPiece):
 
 
 class ChessMatch(object):
+    """Docstring
+    """
     
 
     def __init__(self, pieces=None):
@@ -104,6 +126,8 @@ class ChessMatch(object):
             self.log = []
             
     def reset(self):
+        """Some Docstring.
+        """
         self.log = []
         self.pieces = {'Ra1': Rook('a1'),
                     'Rh1': Rook('h1'),
@@ -119,35 +143,13 @@ class ChessMatch(object):
         return self.pieces
         
     def move(self, piece, position):
+        """Docstring
+        """
         ChessPiece.move.__init__(self)
-        holdpieces = self.pieces.items()
-        if piece[0] is 'K':
-            self.log.append((piece, piece[0]+position, time.time()))
-            newmove = King(position)
-            self.pieces[piece] = King(position)
-        elif piece[0] is 'B':
-            self.log.append((piece, piece[0]+position, time.time()))
-            newmove = Bishop(position)
-            self.pieces[piece] = King(position)
-        elif piece[0] is 'K':
-            self.log.append((piece, piece[0]+position, time.time()))
-            newmove = Rook(position)
-            self.pieces[piece] = King(position)
-        else:
-            return False
-        
-    def __len__(self):
-        piecelist = self.pieces.items()
-        return len(piecelist)
-
-if __name__ == '__main__':
-    white = King('e1')
-    black = King('e8')
-    match = ChessMatch({'Ke1': white, 'Ke8': black})
-    match.move('Ke1', 'f2')
-    match.move('Kf2', 'f3')
-    ish = ChessPiece('a1')
-    ish.move('b2')
-    
-
-    
+        if piece in self.pieces:
+            self.pieces[piece]
+            chesspiece = self.pieces[piece]
+            moved = chesspiece.move(position)
+            self.log.append(moved)
+            self.pieces.pop(piece)
+            self.pieces.update({moved[1]:chesspiece})
