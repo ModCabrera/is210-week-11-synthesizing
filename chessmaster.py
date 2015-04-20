@@ -148,7 +148,7 @@ class Pawn(ChessPiece):
                 if abs(int(position[1]) - int(self.position[1])) == 1:
                     return True
             elif position[1] == self.position[1]:
-                    return True
+                return True
             else:
                 return False
 
