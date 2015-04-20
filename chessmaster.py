@@ -103,7 +103,9 @@ class ChessPiece(object):
         [('a1', 'e7', 1413252815.610075), ('e7', 'b2', 1413252817.89340)]
         """
         if self.is_legal_move(position):
-            move = (self.prefix + self.position, self.prefix + position, time.time())
+            position1 = self.prefix + self.position
+            position2 = self.prefix + position
+            move = (position1, position2, time.time())
             self.moves.append(move)
             self.position = position
             return move
@@ -217,7 +219,7 @@ class King(ChessPiece):
         oldpos = self.algebraic_to_numeric(position)
         newpos = self.algebraic_to_numeric(self.position)
         if abs(newpos[1] - oldpos[1]) <= 1:
-            if newpos[1]+newpos[0]%oldpos[1]+oldpos[0]:
+            if newpos[1]+newpos[0] % oldpos[1]+oldpos[0]:
                 return True
         else:
             return False
@@ -298,9 +300,8 @@ class ChessMatch(object):
         """
         ChessPiece.move.__init__(self)
         if piece in self.pieces:
-            self.pieces[piece]
             chesspiece = self.pieces[piece]
             moved = chesspiece.move(position)
             self.log.append(moved)
             self.pieces.pop(piece)
-            self.pieces.update({moved[1]:chesspiece})
+            self.pieces.update({moved[1]: chesspiece})
